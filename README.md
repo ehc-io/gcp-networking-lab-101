@@ -1,5 +1,3 @@
-# gcp-networking-lab-101
-
 # GCP Networking Lab 101
 
 A Terraform-based lab environment demonstrating core Google Cloud Platform networking concepts with multiple VPCs, VPN connectivity, and hybrid networking.
