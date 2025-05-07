@@ -1,0 +1,150 @@
+### vpc
+resource "google_compute_network" "vpc-east" {
+  project                 = module.project.name
+  name                    = "vpc-east"
+  routing_mode            = "GLOBAL"
+  auto_create_subnetworks = false
+}
+
+resource "google_compute_network" "vpc-west" {
+  project                 = module.project.name
+  name                    = "vpc-west"
+  routing_mode            = "GLOBAL"
+  auto_create_subnetworks = false
+}
+
+resource "google_compute_network" "vpc-central" {
+  project                 = module.project.name
+  name                    = "vpc-central"
+  routing_mode            = "GLOBAL"
+  auto_create_subnetworks = false
+}
+
+### Subnets
+resource "google_compute_subnetwork" "east_subnet1" {
+  project       = module.project.name
+  name          = "east-subnet-1"
+  ip_cidr_range = var.network_cidr_vpc_east
+  region        = var.region1
+  network       = google_compute_network.vpc-east.id
+}
+
+resource "google_compute_subnetwork" "central_subnet1" {
+  project       = module.project.name
+  name          = "central-subnet-1"
+  ip_cidr_range = var.network_cidr_vpc_central
+  region        = var.region2
+  network       = google_compute_network.vpc-central.id
+  
+  # secondary_ip_range = [ {
+  #   ip_cidr_range =  var.pods_cidr
+  #   range_name = "pods"
+  # },
+  # {
+  #   ip_cidr_range =  var.services_cidr
+  #   range_name = "services"
+  # },
+  # {
+  #   ip_cidr_range =  var.cloudrun_cidr
+  #   range_name = "cloudrun"
+  # },
+  # ]
+}
+
+resource "google_compute_subnetwork" "west_subnet1" {
+  project       = module.project.name
+  name          = "west-subnet-1"
+  ip_cidr_range = var.network_cidr_vpc_west
+  region        = var.region3
+  network       = google_compute_network.vpc-west.id
+}
+
+### NAT
+resource "google_compute_router_nat" "nat_central" {
+    project = module.project.name
+    name    = "nat-central"
+    router  = google_compute_router.router_nat_central.name
+    region  = var.region2
+    nat_ip_allocate_option  = "AUTO_ONLY"
+    source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
+    log_config {
+    enable = true
+    filter = "ERRORS_ONLY"
+    }
+}
+
+resource "google_compute_router_nat" "nat_west" {
+    project = module.project.name
+    name    = "nat-west"
+    router  = google_compute_router.router_nat_west.name
+    region  = var.region3
+    nat_ip_allocate_option  = "AUTO_ONLY"
+    source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
+    log_config {
+    enable = true
+    filter = "ERRORS_ONLY"
+    }
+}
+
+resource "google_compute_router_nat" "nat_east" {
+    project = module.project.name
+    name    = "nat-east"
+    router  = google_compute_router.router_nat_east.name
+    region  = var.region1
+    nat_ip_allocate_option  = "AUTO_ONLY"
+    source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
+    log_config {
+    enable = true
+    filter = "ERRORS_ONLY"
+    }
+}
+
+### Peering
+# resource "google_compute_network_peering" "peering_east_central" {
+#   name         = "peering-east-central"
+#   network      = google_compute_network.vpc-east.self_link
+#   peer_network = google_compute_network.vpc-central.self_link
+# }
+# resource "google_compute_network_peering" "peering_central_east" {
+#   name         = "peering-central-east"
+#   network      = google_compute_network.vpc-central.self_link
+#   peer_network = google_compute_network.vpc-east.self_link
+# }
+
+### Routers
+resource "google_compute_router" "router-central" {
+  name    = "router-central"
+  region  = var.region3
+  network = google_compute_network.vpc-central.self_link
+  bgp {
+    asn = 64515
+  }
+}
+
+resource "google_compute_router" "router_nat_central" {
+  name    = "router-nat-central"
+  region  = var.region2
+  network = google_compute_network.vpc-central.self_link
+}
+
+resource "google_compute_router" "router_nat_west" {
+  name    = "router-nat-west"
+  region  = var.region3
+  network = google_compute_network.vpc-west.self_link
+}
+
+resource "google_compute_router" "router-west" {
+  name    = "router-west"
+  region  = var.region3
+  network = google_compute_network.vpc-west.self_link
+  bgp {
+    asn = 64514
+  }
+}
+
+resource "google_compute_router" "router_nat_east" {
+  name    = "router-nat-east"
+  region  = var.region1
+  network = google_compute_network.vpc-east.self_link
+}
+
