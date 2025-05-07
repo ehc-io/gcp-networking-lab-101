@@ -74,11 +74,11 @@ The lab creates the following network architecture:
 
 ```
 +---------------+       +---------------+       +---------------+
-|    vpc-east   |-------|  vpc-central  |       |   vpc-west    |
-| 192.168.10/24 | Peering| 192.168.20/24|       | 192.168.30/24 |
-|   (us-east1)  |       | (us-central1) |       |  (us-west1)   |
+|    vpc-east   |       |  vpc-central  |       |   vpc-west    |
+| 192.168.10/24 |       | 192.168.20/24|       | 192.168.30/24 |
+|   (us-east1)  |-------| (us-central1) |       |  (us-west1)   |
 +-------+-------+       +-------+-------+       +-------+-------+
-        |                       |                       |
+        |        Peering        |                       |
         |                       |                       |
 +-------v-------+       +-------v-------+       +-------v-------+
 |    i-east     |       |   i-central   |       |    i-west     |
@@ -145,7 +145,7 @@ Confirm by typing `yes` when prompted.
 
 ## Contributors
 
-- ehc-io team
+- ehc-io
 
 ## License
 
