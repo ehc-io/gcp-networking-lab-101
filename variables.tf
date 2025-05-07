@@ -1,6 +1,7 @@
 variable "project_id" { 
-    default = "netlab-bnjb"
+    default = "netlab-m4xe"
 }
+
 variable "billing_account" {
     default = "01DFCC-68D5BF-936A21"
 }
