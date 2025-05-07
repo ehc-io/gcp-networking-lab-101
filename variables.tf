@@ -2,11 +2,11 @@ variable "project_id" {
     default = "netlab-bnjb"
 }
 variable "billing_account" {
-    default = "01DFCC-68D5BF-936A21"
+    default = "<BILLING-ID>"
 }
 
 variable "google_folder" {
-    default = "folders/782700989057"
+    default = "<FOLDER-PATH>"
 }
 
 variable "network_cidr_vpc_east" { 
