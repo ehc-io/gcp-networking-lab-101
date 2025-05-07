@@ -1,13 +1,13 @@
 variable "project_id" { 
-    default = "netlab-m4xe"
+    default = "<PROJECT-ID>"
 }
 
 variable "billing_account" {
-    default = "01DFCC-68D5BF-936A21"
+    default = "<BILLING-ID>"
 }
 
 variable "google_folder" {
-    default = "folders/782700989057"
+    default = "folders/<FOLDER-ID>"
 }
 
 variable "network_cidr_vpc_east" { 
@@ -76,8 +76,7 @@ variable "cluster_name" {
 locals {
   resource_labels = {
     env         = "netlabs"
-    repo        = "ehc-io"
-    solution    = "gke-autopilot-hpa"
+    repo        = "GCP-Terraform-Snippets"
     terraform   = "true"
   }
 }
