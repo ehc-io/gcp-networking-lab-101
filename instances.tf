@@ -22,7 +22,8 @@ resource "google_compute_instance" "i-central" {
   metadata_startup_script = "echo hi > /test.txt"
 
   service_account {
-    email  = module.project.service_accounts.default.compute
+    # Use the output from data source in main.tf
+    email  = data.google_compute_default_service_account.default.email
     scopes = ["cloud-platform"]
   }
 
@@ -51,7 +52,7 @@ resource "google_compute_instance" "i-east" {
   metadata_startup_script = "echo hi > /test.txt"
 
   service_account {
-    email  = module.project.service_accounts.default.compute
+    email  = data.google_compute_default_service_account.default.email
     scopes = ["cloud-platform"]
   }
 
@@ -79,10 +80,8 @@ resource "google_compute_instance" "i-west" {
   metadata_startup_script = "echo hi > /test.txt"
 
   service_account {
-    email  = module.project.service_accounts.default.compute
+    email  = data.google_compute_default_service_account.default.email
     scopes = ["cloud-platform"]
   }
 
 }
-
-

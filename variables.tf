@@ -1,12 +1,12 @@
 variable "project_id" { 
-    default = "netlab-<ID-STRING>"
+    default = "netlab-bnjb"
 }
 variable "billing_account" {
-    default = "<BILLING-ID>"
+    default = "01DFCC-68D5BF-936A21"
 }
 
 variable "google_folder" {
-    default = "<FOLDER-PATH>"
+    default = "folders/782700989057"
 }
 
 variable "network_cidr_vpc_east" { 
@@ -53,14 +53,30 @@ variable "network_tags" {
     default = [ "mgmt", "ssh" ]
 }
 
-variable "mgmg-network" {
-    default = "<REMOTE-MGMT-IP>"
+variable "homeclaro" {
+    default = "187.35.15.198/32"
+}
+variable "pods_cidr" {
+    default = "10.0.0.0/22"
+}
+variable "services_cidr" {
+    default = "10.0.4.0/24"
+}
+variable "cloudrun_cidr" {
+    default = "10.0.5.0/24"
+}
+variable "master_cidr" {
+    default = "10.0.7.0/28"
+}
+variable "cluster_name" {
+    default = "k8s-c3rM"
 }
 
 locals {
   resource_labels = {
     env         = "netlabs"
-    repo        = "my-repo"
+    repo        = "ehc-io"
+    solution    = "gke-autopilot-hpa"
     terraform   = "true"
   }
 }

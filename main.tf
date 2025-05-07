@@ -2,26 +2,20 @@ provider "google" {
   project = var.project_id
 }
 
-module "project" {
-    source              = "github.com/GoogleCloudPlatform/cloud-foundation-fabric//modules/project?ref=v13.0.0"
-    name                =  "${var.project_id}"
-    billing_account     = var.billing_account
-    parent              = var.google_folder
-    services = [
-    "compute.googleapis.com",
-    "container.googleapis.com",
-    "artifactregistry.googleapis.com"
-    ]
+# Enable required APIs
+resource "google_project_service" "compute_api" {
+  service = "compute.googleapis.com"
+  disable_on_destroy = false
 }
 
-# Enable the Container API
 resource "google_project_service" "container_api" {
   service = "container.googleapis.com"
+  disable_on_destroy = false
 }
 
-# # Enable the Artifact Registry API
 resource "google_project_service" "artifactregistry_api" {
   service = "artifactregistry.googleapis.com"
+  disable_on_destroy = false
 }
 
 # Create a service account for the GKE cluster
@@ -43,10 +37,15 @@ resource "google_project_iam_binding" "cluster_sa_iam_binding" {
   ]
 }
 
+# Get the default compute service account
+data "google_compute_default_service_account" "default" {
+  depends_on = [google_project_service.compute_api]
+}
+
 output "gce_service_account" {
-    value = module.project.service_accounts.default.compute
+  value = data.google_compute_default_service_account.default.email
 }
 
 output "gke_service_account" {
-    value = google_service_account.cluster_sa.email
+  value = google_service_account.cluster_sa.email
 }

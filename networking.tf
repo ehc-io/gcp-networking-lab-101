@@ -1,20 +1,20 @@
 ### vpc
 resource "google_compute_network" "vpc-east" {
-  project                 = module.project.name
+  project                 = var.project_id
   name                    = "vpc-east"
   routing_mode            = "GLOBAL"
   auto_create_subnetworks = false
 }
 
 resource "google_compute_network" "vpc-west" {
-  project                 = module.project.name
+  project                 = var.project_id
   name                    = "vpc-west"
   routing_mode            = "GLOBAL"
   auto_create_subnetworks = false
 }
 
 resource "google_compute_network" "vpc-central" {
-  project                 = module.project.name
+  project                 = var.project_id
   name                    = "vpc-central"
   routing_mode            = "GLOBAL"
   auto_create_subnetworks = false
@@ -22,7 +22,7 @@ resource "google_compute_network" "vpc-central" {
 
 ### Subnets
 resource "google_compute_subnetwork" "east_subnet1" {
-  project       = module.project.name
+  project       = var.project_id
   name          = "east-subnet-1"
   ip_cidr_range = var.network_cidr_vpc_east
   region        = var.region1
@@ -30,7 +30,7 @@ resource "google_compute_subnetwork" "east_subnet1" {
 }
 
 resource "google_compute_subnetwork" "central_subnet1" {
-  project       = module.project.name
+  project       = var.project_id
   name          = "central-subnet-1"
   ip_cidr_range = var.network_cidr_vpc_central
   region        = var.region2
@@ -52,7 +52,7 @@ resource "google_compute_subnetwork" "central_subnet1" {
 }
 
 resource "google_compute_subnetwork" "west_subnet1" {
-  project       = module.project.name
+  project       = var.project_id
   name          = "west-subnet-1"
   ip_cidr_range = var.network_cidr_vpc_west
   region        = var.region3
@@ -61,7 +61,7 @@ resource "google_compute_subnetwork" "west_subnet1" {
 
 ### NAT
 resource "google_compute_router_nat" "nat_central" {
-    project = module.project.name
+    project = var.project_id
     name    = "nat-central"
     router  = google_compute_router.router_nat_central.name
     region  = var.region2
@@ -74,7 +74,7 @@ resource "google_compute_router_nat" "nat_central" {
 }
 
 resource "google_compute_router_nat" "nat_west" {
-    project = module.project.name
+    project = var.project_id
     name    = "nat-west"
     router  = google_compute_router.router_nat_west.name
     region  = var.region3
@@ -87,7 +87,7 @@ resource "google_compute_router_nat" "nat_west" {
 }
 
 resource "google_compute_router_nat" "nat_east" {
-    project = module.project.name
+    project = var.project_id
     name    = "nat-east"
     router  = google_compute_router.router_nat_east.name
     region  = var.region1
@@ -147,4 +147,3 @@ resource "google_compute_router" "router_nat_east" {
   region  = var.region1
   network = google_compute_network.vpc-east.self_link
 }
-
