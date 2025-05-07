@@ -87,9 +87,9 @@ The lab creates the following network architecture:
                                 ^                       ^
                                 |                       |
                                 +-------HA VPN----------+
-                                |  BGP Peering ASNs    |
-                                | 64515 <--> 64514     |
-                                +---------------------+
+                                |  BGP Peering ASNs     |
+                                |   64515 <--> 64514    |
+                                +-----------------------+
 ```
 
 ## Testing Connectivity
